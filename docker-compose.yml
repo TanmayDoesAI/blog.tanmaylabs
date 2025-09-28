@@ -1,0 +1,22 @@
+# FILE: docker-compose.yml
+
+services:
+  jekyll:
+    image: mrxder/jekyll-docker-arm64:latest
+    container_name: jekyll-blog
+    ports:
+      - "3001:4000"
+    volumes:
+      - .:/var/jekyll
+      - bundle-cache:/usr/local/bundle
+    environment:
+      - JEKYLL_ENV=development
+    command: >
+      bash -c "bundle install && bundle exec jekyll serve --host 0.0.0.0 --livereload --force_polling"  
+
+    # bash -c "bundle install && bundle exec jekyll serve --host 0.0.0.0 --livereload --force_polling --future"
+
+    restart: unless-stopped
+
+volumes:
+  bundle-cache:

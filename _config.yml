@@ -1,0 +1,42 @@
+title: TanmayLabs
+description: Sharing thoughts on tech, life, and everything in between
+baseurl: ""
+url: "https://blog.tanmaylabs.me"
+author:
+  name: Tanmay Jain
+  email: tanmay5tj@gmail.com
+
+markdown: kramdown
+highlighter: rouge
+theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-paginate
+
+paginate: 5
+paginate_path: "/page:num/"
+
+collections:
+  posts:
+    output: true
+    permalink: /:categories/:year/:month/:day/:title/
+
+navigation:
+  - title: Home
+    url: /
+  - title: About
+    url: /about/
+
+social:
+  github: tanmaydoesai
+  linkedin: tanmaydoesai
+
+livereload: true
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - docker-compose.yml
+  - README.md
+  - vendor/
