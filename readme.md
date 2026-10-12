@@ -21,7 +21,7 @@ This project uses Docker and Docker Compose to ensure a consistent development e
 3.  **Access the site:**
     Open your browser and navigate to [http://localhost:3001](http://localhost:3001).
 
-The site will automatically rebuild and reload when you make changes to the files.
+The site rebuilds automatically when you change files. `docker-compose.yml` runs in production mode, so canonical, Open Graph, feed and structured-data URLs use `https://blog.tanmaylabs.me` and LiveReload is off. For local development with LiveReload, run `docker compose -f docker-compose.yml -f docker-compose.dev.yml up`.
 
 ## Managing Content
 ### Adding a New Post
@@ -53,3 +53,17 @@ Global settings for the blog can be changed in the `_config.yml` file. Here you 
 -   `author`: Your name and email.
 -   `navigation`: Add or remove links from the site's main navigation menu.
 -   `social`: Your social media handles.
+## Interactive charts (Tool Selection Lab)
+
+Posts can embed interactive Apache ECharts charts. ECharts (pinned 5.6.0, vendored in `assets/lib/echarts/`) and `assets/js/tool-selection-charts.js` load only on posts with `interactive_charts: true` in their front matter.
+
+```liquid
+{% include tool-selection-chart.html chart="completion" %}   {# completion by strategy #}
+{% include tool-selection-chart.html chart="tradeoff" %}     {# reliability vs tokens per completed task #}
+{% include tool-selection-chart.html chart="complexity" %}   {# single-tool vs multi-step #}
+{% include tool-selection-results.html %}                    {# collapsible table + CSV/JSON downloads #}
+```
+
+- Data lives in `assets/data/tool-selection-charts.json` (plus the two CSV downloads). To use another file, pass `data="/assets/data/other.json"` (same schema).
+- `_data/tool_selection_charts.json` must be an identical copy of the JSON; it only feeds the no-JavaScript table. Refresh it with `cp assets/data/tool-selection-charts.json _data/tool_selection_charts.json`.
+- Optional per-include overrides: `title`, `subtitle`, and (complexity chart) `featured="all,hybrid,..."`.

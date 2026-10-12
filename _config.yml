@@ -32,8 +32,6 @@ social:
   github: tanmaydoesai
   linkedin: tanmaydoesai
 
-livereload: true
-
 exclude:
   - Gemfile
   - Gemfile.lock

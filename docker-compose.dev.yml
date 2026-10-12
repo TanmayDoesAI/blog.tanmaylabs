@@ -1,0 +1,8 @@
+# Local development override: development URLs and LiveReload.
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+services:
+  jekyll:
+    environment:
+      - JEKYLL_ENV=development
+    command: >
+      bash -c "bundle install && bundle exec jekyll serve --host 0.0.0.0 --livereload --force_polling"
