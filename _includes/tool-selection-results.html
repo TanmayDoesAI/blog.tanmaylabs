@@ -1,0 +1,64 @@
+{%- comment -%}
+  Collapsible results table (all model x strategy rows) with CSV/JSON downloads.
+  Place once, below the charts:  {% include tool-selection-results.html %}
+
+  The rows below are rendered by Jekyll from _data/tool_selection_charts.json so the
+  table is readable without JavaScript. When JavaScript runs it rebuilds the table from
+  assets/data/tool-selection-charts.json (the file the charts use), so the two always
+  agree on screen. Keep the two JSON files identical:
+    cp assets/data/tool-selection-charts.json _data/tool_selection_charts.json
+{%- endcomment -%}
+{%- assign tsl_d = site.data.tool_selection_charts -%}
+{%- assign tsl_src = include.data | default: "/assets/data/tool-selection-charts.json" -%}
+{%- comment -%} Model order here must match MODEL_ORDER in assets/js/tool-selection-charts.js {%- endcomment -%}
+{%- assign tsl_order = "gpt-oss-20b,nemotron-3.5-lightning-30b-a3b,nemotron-3-super-120b-a12b" | split: "," -%}
+{%- assign tsl_ranked = tsl_d.overall | sort: "success_pct" | reverse -%}
+<section class="tsl-results" data-tsl-results data-src="{{ tsl_src | relative_url }}">
+  <details class="tsl-results__details">
+    <summary><span data-tsl-results-summary>All {{ tsl_d.by_model.size }} model and strategy results</span></summary>
+    <div class="tsl-table-wrap" role="region" aria-label="Benchmark results table" tabindex="0">
+      <table class="tsl-table">
+        <caption>Task completion and model-token usage for every model and strategy. Tokens are model input plus output tokens, not dollar cost.</caption>
+        <thead>
+          <tr>
+            <th scope="col">Strategy</th>
+            <th scope="col">Model</th>
+            <th scope="col" class="is-num">Completed</th>
+            <th scope="col" class="is-num">Success</th>
+            <th scope="col" class="is-num">Input tokens</th>
+            <th scope="col" class="is-num">Output tokens</th>
+            <th scope="col" class="is-num">Tokens per completed task</th>
+          </tr>
+        </thead>
+        <tbody data-tsl-results-body>
+          {%- for o in tsl_ranked -%}
+            {%- assign strat = tsl_d.strategies | where: "key", o.strategy | first -%}
+            {%- assign srows = tsl_d.by_model | where: "strategy", o.strategy -%}
+            {%- for mk in tsl_order -%}
+              {%- assign r = srows | where: "model", mk | first -%}
+              {%- assign mdl = tsl_d.models | where: "key", mk | first -%}
+              {%- if r -%}
+          <tr>
+            <th scope="row">{{ strat.label }}</th>
+            <td>{{ mdl.label }}</td>
+            <td class="is-num">{{ r.completed }} / {{ r.jobs }}</td>
+            <td class="is-num">{{ r.success_pct | round: 1 }}%</td>
+            <td class="is-num">{% include tsl-int.html n=r.input_tokens_total %}</td>
+            <td class="is-num">{% include tsl-int.html n=r.output_tokens_total %}</td>
+            <td class="is-num">{% include tsl-int.html n=r.tokens_per_completed_task %}</td>
+          </tr>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+    <p class="tsl-results__note">Rows are ordered by three-model completion rate. Tokens per completed task = (input + output tokens across all jobs, including failures) ÷ completed tasks. Token totals exclude superseded attempts and are lower bounds where usage data was missing.</p>
+  </details>
+  <p class="tsl-results__downloads">
+    Download the data:
+    <a href="{{ tsl_src | relative_url }}" download>JSON (all charts)</a> ·
+    <a href="{{ '/assets/data/tool-selection-model-strategy.csv' | relative_url }}" download>CSV: model × strategy</a> ·
+    <a href="{{ '/assets/data/tool-selection-task-type.csv' | relative_url }}" download>CSV: task types</a>
+  </p>
+</section>

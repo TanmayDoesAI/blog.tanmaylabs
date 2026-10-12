@@ -1,0 +1,9 @@
+{%- comment -%} Prints an integer with thousands separators: {% include tsl-int.html n=30921 %} -> 30,921 {%- endcomment -%}
+{%- assign _tsl_s = include.n | round | append: "" -%}
+{%- assign _tsl_len = _tsl_s | size -%}
+{%- assign _tsl_last = _tsl_len | minus: 1 -%}
+{%- for _tsl_i in (0.._tsl_last) -%}
+  {%- assign _tsl_rest = _tsl_len | minus: _tsl_i | modulo: 3 -%}
+  {%- if _tsl_i > 0 and _tsl_rest == 0 -%},{%- endif -%}
+  {{- _tsl_s | slice: _tsl_i -}}
+{%- endfor -%}

@@ -1,0 +1,6 @@
+{%- comment -%}
+  Loaded only by posts with `interactive_charts: true` (see _layouts/post.html).
+  ECharts 5.6.0 is vendored (assets/lib/echarts) so the page makes no third-party requests.
+{%- endcomment -%}
+<script src="{{ '/assets/lib/echarts/echarts.min.js' | relative_url }}?v=5.6.0" defer></script>
+<script src="{{ '/assets/js/tool-selection-charts.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>

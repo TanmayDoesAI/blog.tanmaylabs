@@ -84,3 +84,361 @@
     font-size: 0.9rem;
   }
 }
+
+
+// ---------------------------------------------------------------------------
+// Tool Selection Lab: interactive charts (assets/js/tool-selection-charts.js)
+// Everything is scoped to .tsl-*; the colours below are read by the script.
+// Model colours: validated 3-colour set (blue, orange, aqua); aqua is paired with
+// a distinct marker shape and always has a text label, so colour is never alone.
+// ---------------------------------------------------------------------------
+.tsl-chart,
+.tsl-results {
+  --tsl-ink: #111111;
+  --tsl-ink-2: #424242;
+  --tsl-muted: #6b6b68;
+  --tsl-grid: #ebebe8;
+  --tsl-axis: #cfcfca;
+  --tsl-track: #f3f3f0;
+  --tsl-surface: #ffffff;
+  --tsl-border: #e5e5e1;
+  --tsl-aggregate: #44505f;
+  --tsl-model-1: #2a78d6;
+  --tsl-model-2: #eb6834;
+  --tsl-model-3: #1baf7a;
+  --tsl-accent: #2a7ae4;
+}
+
+.tsl-chart {
+  box-sizing: border-box;
+  margin: 2rem 0;
+  padding: 1.15rem 1.25rem 1rem;
+  max-width: 100%;
+  min-width: 0;
+  background: var(--tsl-surface);
+  border: 1px solid var(--tsl-border);
+  border-radius: 10px;
+  color: var(--tsl-ink);
+
+  .tsl-chart__title {
+    margin: 0 0 0.25rem;
+    font-size: 1.1rem;
+    line-height: 1.3;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+  }
+  .tsl-chart__sub {
+    margin: 0 0 0.9rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--tsl-ink-2);
+  }
+
+  // controls ---------------------------------------------------------------
+  .tsl-chart__controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.6rem 1.4rem;
+    margin-bottom: 0.9rem;
+    &[hidden] { display: none; }
+  }
+  .tsl-control { min-width: 0; max-width: 100%; }
+  .tsl-control__label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--tsl-muted);
+  }
+  .tsl-seg {
+    display: inline-flex;
+    flex-wrap: wrap;
+    max-width: 100%;
+    padding: 2px;
+    gap: 2px;
+    background: var(--tsl-track);
+    border: 1px solid var(--tsl-border);
+    border-radius: 8px;
+  }
+  .tsl-seg__btn,
+  .tsl-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin: 0;
+    padding: 0.38rem 0.7rem;
+    min-height: 34px;
+    font: inherit;
+    font-size: 0.84rem;
+    line-height: 1.2;
+    color: var(--tsl-ink-2);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color 0.12s ease, color 0.12s ease, box-shadow 0.12s ease;
+
+    &:hover { color: var(--tsl-ink); background: rgba(17, 17, 17, 0.04); }
+    &:focus-visible { outline: 2px solid var(--tsl-accent); outline-offset: 1px; }
+    &.is-on {
+      color: var(--tsl-ink);
+      font-weight: 600;
+      background: var(--tsl-surface);
+      border-color: var(--tsl-axis);
+      box-shadow: 0 1px 2px rgba(17, 17, 17, 0.08);
+    }
+  }
+  .tsl-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .tsl-chip {
+    padding: 0.38rem 0.8rem;
+    background: var(--tsl-surface);
+    border-color: var(--tsl-border);
+    border-radius: 999px;
+    &:hover { background: var(--tsl-track); }
+    &.is-on { box-shadow: none; border-color: var(--tsl-ink-2); }
+    &:not(.is-on) { color: var(--tsl-muted); .tsl-sw { opacity: 0.35; } }
+  }
+
+  // model swatches: same hue and marker shape as the scatterplot
+  .tsl-sw {
+    display: inline-block;
+    flex: none;
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: var(--tsl-aggregate);
+  }
+  .tsl-sw--m1 { background: var(--tsl-model-1); }
+  .tsl-sw--m2 { background: var(--tsl-model-2); }
+  .tsl-sw--m3 { background: var(--tsl-model-3); }
+  .tsl-sw--diamond { border-radius: 1px; transform: rotate(45deg) scale(0.82); }
+  .tsl-sw--triangle { border-radius: 0; clip-path: polygon(50% 6%, 100% 94%, 0 94%); }
+
+  // solid / hatched key (task complexity)
+  .tsl-key {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    font-size: 0.84rem;
+    color: var(--tsl-ink-2);
+    align-self: flex-end;
+    padding-bottom: 0.4rem;
+  }
+  .tsl-key__item { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .tsl-key__sub { color: var(--tsl-muted); }
+  .tsl-key__sw {
+    width: 1.1rem;
+    height: 0.7rem;
+    border-radius: 2px;
+    border: 1px solid var(--tsl-key, var(--tsl-aggregate));
+    background: var(--tsl-key, var(--tsl-aggregate));
+  }
+  .tsl-key__sw--hatch {
+    background: repeating-linear-gradient(135deg, var(--tsl-key, var(--tsl-aggregate)) 0 1.5px, transparent 1.5px 4px);
+  }
+
+  // canvas -----------------------------------------------------------------
+  .tsl-chart__stage { position: relative; min-width: 0; }
+  .tsl-chart__canvas {
+    position: relative;
+    width: 100%;
+    min-height: 260px;
+    // the tooltip lives inside the canvas box; allow it to be seen above neighbours
+    overflow: visible;
+    -webkit-tap-highlight-color: transparent;
+  }
+  &:not(.is-ready) .tsl-chart__canvas { min-height: 0; }
+
+  .tsl-chart__status {
+    margin: 0.55rem 0 0;
+    font-size: 0.86rem;
+    line-height: 1.5;
+    color: var(--tsl-ink);
+    &:empty { display: none; }
+  }
+  .tsl-chart__status-line { display: block; }
+  .tsl-chart__note {
+    margin: 0.5rem 0 0;
+    font-size: 0.76rem;
+    line-height: 1.5;
+    color: var(--tsl-muted);
+    &:empty { display: none; }
+  }
+  // Shown inside <noscript>, or un-hidden by the script if the chart fails to load.
+  .tsl-chart__fallback {
+    margin: 0.75rem 0 0;
+    font-size: 0.88rem;
+    color: var(--tsl-ink-2);
+    &[hidden] { display: none; }
+  }
+  &.is-failed .tsl-chart__canvas,
+  &.is-failed .tsl-chart__controls,
+  &.is-failed .tsl-chart__status,
+  &.is-failed .tsl-chart__note { display: none; }
+}
+
+// ECharts tooltip content -----------------------------------------------------
+.tsl-echarts-tip {
+  max-width: 320px;
+  .tsl-tip {
+    padding: 0.7rem 0.85rem 0.75rem;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    white-space: normal;
+    color: #111111;
+  }
+  .tsl-tip__title { font-weight: 650; font-size: 0.9rem; line-height: 1.3; }
+  .tsl-tip__sub {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0.1rem 0 0.45rem;
+    color: #6b6b68;
+  }
+  .tsl-tip__big {
+    margin-bottom: 0.3rem;
+    font-size: 1.35rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    span { font-size: 0.78rem; font-weight: 400; color: #6b6b68; letter-spacing: 0; }
+  }
+  .tsl-tip__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1.1rem;
+    padding: 0.12rem 0;
+    border-top: 1px solid #efefec;
+    &:first-of-type { border-top: 0; }
+  }
+  .tsl-tip__k { display: inline-flex; align-items: center; gap: 0.4rem; color: #52514e; }
+  .tsl-tip__v { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .tsl-tip__dot {
+    display: inline-block;
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 50%;
+    background: var(--c);
+  }
+  .tsl-tip__dot--diamond { border-radius: 1px; transform: rotate(45deg) scale(0.82); }
+  .tsl-tip__dot--triangle { border-radius: 0; clip-path: polygon(50% 6%, 100% 94%, 0 94%); }
+  .tsl-tip__sw {
+    display: inline-block;
+    width: 0.9rem;
+    height: 0.6rem;
+    border-radius: 2px;
+    border: 1px solid var(--c);
+    background: var(--c);
+  }
+  .tsl-tip__sw--hatch {
+    background: repeating-linear-gradient(135deg, var(--c) 0 1.5px, transparent 1.5px 4px);
+  }
+}
+
+// Results table + downloads ---------------------------------------------------
+.tsl-results {
+  margin: 1.5rem 0 2rem;
+  color: var(--tsl-ink);
+
+  .tsl-results__details {
+    border: 1px solid var(--tsl-border);
+    border-radius: 10px;
+    background: var(--tsl-surface);
+    > summary {
+      padding: 0.8rem 1.1rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border-radius: 10px;
+      &:focus-visible { outline: 2px solid var(--tsl-accent); outline-offset: 2px; }
+    }
+    &[open] > summary { border-bottom: 1px solid var(--tsl-border); border-radius: 10px 10px 0 0; }
+  }
+  .tsl-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    &:focus-visible { outline: 2px solid var(--tsl-accent); outline-offset: -2px; }
+  }
+  .tsl-table {
+    width: 100%;
+    margin: 0;
+    border: 0;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    caption {
+      padding: 0.7rem 1.1rem 0.3rem;
+      text-align: left;
+      font-size: 0.8rem;
+      color: var(--tsl-muted);
+      caption-side: top;
+    }
+    th, td {
+      padding: 0.45rem 0.7rem;
+      text-align: left;
+      border: 0;
+      border-bottom: 1px solid var(--tsl-grid);
+      white-space: nowrap;
+      vertical-align: baseline;
+    }
+    thead th {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--tsl-muted);
+      white-space: normal;
+      vertical-align: bottom;
+      border-bottom-color: var(--tsl-axis);
+    }
+    tbody tr:nth-child(odd) { background: transparent; }
+    tbody tr:hover { background: var(--tsl-track); }
+    tbody th { font-weight: 600; }
+    .is-num { text-align: right; font-variant-numeric: tabular-nums; }
+    th:first-child, td:first-child { padding-left: 1.1rem; }
+    th:last-child, td:last-child { padding-right: 1.1rem; }
+  }
+  .tsl-results__note {
+    margin: 0;
+    padding: 0.6rem 1.1rem 0.8rem;
+    font-size: 0.76rem;
+    line-height: 1.5;
+    color: var(--tsl-muted);
+  }
+  .tsl-results__downloads {
+    margin: 0.7rem 0 0;
+    font-size: 0.86rem;
+    color: var(--tsl-ink-2);
+  }
+}
+
+@media (max-width: 520px) {
+  .tsl-chart {
+    margin-left: -0.25rem;
+    margin-right: -0.25rem;
+    padding: 0.95rem 0.8rem 0.85rem;
+
+    .tsl-chart__controls { gap: 0.55rem 1rem; }
+    .tsl-control { width: 100%; }
+    .tsl-seg { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
+    .tsl-seg__btn { justify-content: center; }
+    .tsl-key { padding-bottom: 0; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tsl-chart .tsl-seg__btn,
+  .tsl-chart .tsl-chip { transition: none; }
+}
+
+// Wide markdown tables in chart posts scroll inside themselves instead of widening the page.
+@media (max-width: 600px) {
+  .has-interactive-charts .post-content table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

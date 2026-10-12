@@ -1,0 +1,47 @@
+{%- comment -%}
+  Interactive chart for the Tool Selection Lab article (Apache ECharts).
+
+  Usage (the post's front matter must contain `interactive_charts: true`):
+    {% include tool-selection-chart.html chart="completion" %}
+    {% include tool-selection-chart.html chart="tradeoff" %}
+    {% include tool-selection-chart.html chart="complexity" %}
+
+  chart     completion | tradeoff | complexity      (required)
+  data      path to the chart JSON                  (default /assets/data/tool-selection-charts.json)
+  title     heading override
+  subtitle  one-line description override
+  featured  complexity only: comma-separated strategy keys shown by default
+
+  The chart is drawn by assets/js/tool-selection-charts.js. The heading, subtitle
+  and the <noscript> note are what readers see without JavaScript; the
+  numbers are always available in the results table (tool-selection-results.html).
+{%- endcomment -%}
+{%- assign tsl_data = include.data | default: "/assets/data/tool-selection-charts.json" -%}
+{%- case include.chart -%}
+  {%- when "completion" -%}
+    {%- assign tsl_title = include.title | default: "Task completion across nine tool-selection strategies" -%}
+    {%- assign tsl_sub = include.subtitle | default: "Share of benchmark tasks completed successfully. Switch models to compare; hover or tap a bar for exact counts." -%}
+  {%- when "tradeoff" -%}
+    {%- assign tsl_title = include.title | default: "Reliability versus token efficiency" -%}
+    {%- assign tsl_sub = include.subtitle | default: "Each point is one model and strategy. Higher completes more tasks; further left uses fewer model tokens per completed task." -%}
+  {%- when "complexity" -%}
+    {%- assign tsl_title = include.title | default: "Single-tool versus multi-step tasks" -%}
+    {%- assign tsl_sub = include.subtitle | default: "Completion rate by task complexity. Clarification, unsupported and confusable-pair tasks belong to neither group." -%}
+  {%- else -%}
+    {%- assign tsl_title = "Unknown chart" -%}
+    {%- assign tsl_sub = "tool-selection-chart.html: chart must be completion, tradeoff or complexity." -%}
+{%- endcase -%}
+<figure class="tsl-chart tsl-chart--{{ include.chart }}" data-tsl-chart="{{ include.chart }}" data-src="{{ tsl_data | relative_url }}"{% if include.featured %} data-featured="{{ include.featured }}"{% endif %}>
+  <div class="tsl-chart__head">
+    <h3 class="tsl-chart__title" data-tsl-title>{{ tsl_title }}</h3>
+    <p class="tsl-chart__sub">{{ tsl_sub }}</p>
+  </div>
+  <div class="tsl-chart__controls" data-tsl-controls hidden></div>
+  <div class="tsl-chart__stage">
+    <div class="tsl-chart__canvas" data-tsl-canvas role="img"></div>
+  </div>
+  <p class="tsl-chart__status" data-tsl-status aria-live="polite"></p>
+  <p class="tsl-chart__note" data-tsl-note></p>
+  <noscript><p class="tsl-chart__fallback">This chart needs JavaScript. The same numbers are in the results table below{% if include.chart == "tradeoff" %}, and you can <a href="{{ '/assets/data/tool-selection-model-strategy.csv' | relative_url }}">download the CSV</a>{% endif %}.</p></noscript>
+  <p class="tsl-chart__fallback" data-tsl-fallback hidden>The chart could not be loaded. The same numbers are in the results table below{% if include.chart == "tradeoff" %}, and you can <a href="{{ '/assets/data/tool-selection-model-strategy.csv' | relative_url }}">download the CSV</a>{% endif %}.</p>
+</figure>
