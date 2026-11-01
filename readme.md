@@ -2,7 +2,7 @@
 
 This is the repository for my personal blog, [blog.tanmaylabs.me](https://blog.tanmaylabs.me).
 
-It's built with Jekyll. While I currently serve it from my Raspberry Pi, the entire Docker environment can be run on any platform that supports Docker containers. This includes personal servers, a VPS from providers like DigitalOcean or Linode, and container hosting platforms like Railway. Alternatively, you can build the static site and deploy it to services like GitHub Pages, Netlify, or Vercel.
+It's built with Jekyll. It is currently served from a WSL2 (Ubuntu 24.04) laptop host (`tanmay-wsl`) through a Cloudflare tunnel; it used to run on a Raspberry Pi, which is no longer in use. The entire Docker environment can be run on any platform that supports Docker containers. This includes personal servers, a VPS from providers like DigitalOcean or Linode, and container hosting platforms like Railway. Alternatively, you can build the static site and deploy it to services like GitHub Pages, Netlify, or Vercel.
 
 ## Running Locally
 
@@ -18,6 +18,7 @@ This project uses Docker and Docker Compose to ensure a consistent development e
     ```sh
     docker-compose up
     ```
+    > **Stale on the live host:** the repo `docker-compose.yml` is the original Raspberry Pi / ARM64 config (image `mrxder/jekyll-docker-arm64`, port 3001 on all interfaces). It is not what runs on the x86_64 WSL2 host. There, use the ignored local file instead: `docker compose -f .bundle/compose.local.yml up -d` (see `.bundle/README-local.md`; it binds `127.0.0.1:3001` only). The plain command above is still fine on an ARM64 machine.
 3.  **Access the site:**
     Open your browser and navigate to [http://localhost:3001](http://localhost:3001).
 

@@ -5,7 +5,7 @@ permalink: /tool-selection-lab/methodology/
 description: "Execution budget, retained results, token accounting and checks behind the Tool Selection Lab article."
 ---
 
-This page backs up the article [100 Tools, One Agent: Should It Search or See Everything?]({{ '/ai/agents/2026/10/11/100-tools-one-agent-search-or-see-everything/' | relative_url }}). It covers the parts that are too detailed for the article itself.
+This page backs up the article [100 Tools, One Agent: Should It Search or See Everything?]({{ '/ai/agents/2026/10/12/100-tools-one-agent-search-or-see-everything/' | relative_url }}). It covers the parts that are too detailed for the article itself.
 
 ## Execution budget
 

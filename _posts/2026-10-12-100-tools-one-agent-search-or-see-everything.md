@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "100 Tools, One Agent: Should It Search or See Everything?"
-date: 2026-10-11 12:00:00 -0000
+date: 2026-10-12 12:00:00 -0000
 categories: [ai, agents]
 tags: [tool-selection, agents, mcp, benchmarks, embeddings, nvidia-nim]
 author: Tanmay Jain
