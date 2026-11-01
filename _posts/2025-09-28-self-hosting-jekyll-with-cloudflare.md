@@ -22,7 +22,7 @@ Before we can put anything online, we need a domain. If you're tight on budget l
 
 -   **GoDaddy & Other Registrars (Low-Cost):** For others, look out for promotional pricing. GoDaddy frequently runs campaigns where domains start at around ₹200 for the first year.
 
-![GitHub Student Pack Domain Offers]({{ '/assets/images/posts/github-student-pack.png' | relative_url }}){: loading="lazy" decoding="async" width="1600" height="1007" style="height: auto;" }
+{% include picture.html name="github-student-pack" alt="GitHub Student Pack Domain Offers" width="1688" height="1062" %}
 
 After you register the domain, move on to connecting it to Cloudflare.
 
@@ -35,7 +35,7 @@ Cloudflare is the backbone of this setup. It gives your site HTTPS, which preven
 3.  Cloudflare will present you with two nameservers (something like `abc.ns.cloudflare.com`). Copy these two addresses.
 4.  Log in to your domain registrar (Namecheap, GoDaddy) and look for the DNS settings. Change the present nameservers to the new ones.
 
-![Changing to cloudflare nameservers]({{ '/assets/images/posts/namecheap-dns.png' | relative_url }}){: loading="lazy" decoding="async" width="1600" height="790" style="height: auto;" }
+{% include picture.html name="namecheap-dns" alt="Changing to cloudflare nameservers" width="2370" height="1170" %}
 
 This change tells the internet to look to Cloudflare for instructions on where to find your website. It can take anywhere from a few minutes to a few hours to update. In my case, it took about 10 minutes, and I got an email from Cloudflare informing that my site was active.
 
@@ -70,11 +70,11 @@ Once installed, connect it to your Cloudflare account:
 ```sh
 cloudflared tunnel login
 ```
-![cloudflared login output]({{ '/assets/images/posts/cloudflared-login-terminal.png' | relative_url }}){: loading="lazy" decoding="async" width="1196" height="346" style="height: auto;" }
+{% include picture.html name="cloudflared-login-terminal" alt="cloudflared login output" width="1196" height="346" %}
 
 This will open a browser window to authorize your server. Pick the domain you just added.
 
-![Authorizing the tunnel]({{ '/assets/images/posts/cloudflare-auth-browser.png' | relative_url }}){: loading="lazy" decoding="async" width="1600" height="612" style="height: auto;" }
+{% include picture.html name="cloudflare-auth-browser" alt="Authorizing the tunnel" width="1956" height="748" %}
 
 ### Step 4: Create and Run the Tunnel
 
@@ -116,7 +116,7 @@ cloudflared tunnel run jekyll-blog
 ```
 You should see output confirming the connection.
 
-![tunnel connection log in the terminal]({{ '/assets/images/posts/cloudflared-run-success.png' | relative_url }}){: loading="lazy" decoding="async" width="1600" height="619" style="height: auto;" }
+{% include picture.html name="cloudflared-run-success" alt="tunnel connection log in the terminal" width="1712" height="662" %}
 
 Now, open a browser and navigate to your domain. Your local Jekyll site should be live for the world to see!
 
