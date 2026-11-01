@@ -97,7 +97,7 @@ And honestly, it handled it way better than expected.
 
 Section hierarchy was clean. Tables came through as real tables. Formulas survived. Figure captions stayed attached. The markdown was usable immediately.
 
-![Sarvam Vision on the Transformer architecture figure](/assets/images/posts/sarvam-transformer-figure-comparison.png)
+![Sarvam Vision on the Transformer architecture figure]({{ '/assets/images/posts/sarvam-transformer-figure-comparison.png' | relative_url }}){: loading="lazy" decoding="async" width="1600" height="678" style="height: auto;" }
 *Sarvam Vision did not just keep the figure caption. It also generated a detailed description of the architecture diagram, which is useful when the figure itself carries information not fully present in the surrounding text.*
 
 What impressed me most was that this did not feel like OCR in the old sense. It felt much closer to document understanding.
@@ -118,10 +118,10 @@ And the results were still very good.
 
 Not perfect. But clearly beyond "nice demo" territory.
 
-![Sarvam Vision on a Ramanujan scan with dense formulas](/assets/images/posts/sarvam-ramanujan-formula-comparison.png)
+![Sarvam Vision on a Ramanujan scan with dense formulas]({{ '/assets/images/posts/sarvam-ramanujan-formula-comparison.png' | relative_url }}){: loading="lazy" decoding="async" width="1600" height="694" style="height: auto;" }
 *On older mathematical scans, Sarvam Vision preserved the equations surprisingly well. This is exactly the kind of content where a lot of generic OCR pipelines start to fall apart.*
 
-![Sarvam Vision on a Ramanujan table scan](/assets/images/posts/sarvam-ramanujan-table-comparison.png)
+![Sarvam Vision on a Ramanujan table scan]({{ '/assets/images/posts/sarvam-ramanujan-table-comparison.png' | relative_url }}){: loading="lazy" decoding="async" width="1600" height="785" style="height: auto;" }
 *The table extraction was also strong. The structure was preserved instead of being flattened into a noisy text block.*
 
 > This stopped feeling like a cool demo pretty quickly. It started feeling like something I could actually build with.
@@ -132,12 +132,12 @@ And to be fair, Sarvam themselves are not pretending it is flawless. Their launc
 
 Sarvam Vision's launch post reports **84.30** on the English only filtered version of **olmOCR-Bench**, ahead of the models in their published comparison including Mistral OCR 3, Gemini 3 Pro, PaddleOCR VL variants, and GPT-5.2. On that same benchmark, they report strong category performance on ArXiv Math, old scans, headers and footers, and tables. 
 
-![olmOCR benchmark comparison from Sarvam's launch post](/assets/images/posts/sarvam-olmocr-benchmark.png)
+![olmOCR benchmark comparison from Sarvam's launch post]({{ '/assets/images/posts/sarvam-olmocr-benchmark.png' | relative_url }}){: loading="lazy" decoding="async" width="1600" height="1429" style="height: auto;" }
 *On their published olmOCR comparison, Sarvam Vision leads overall and does especially well on categories that matter for research PDFs and messy scans.*
 
 On **OmniDocBench V1.5**, they report **93.28** overall. That does not make them the best on every sub metric, but the category breakdown is still strong: **0.02 TextEdit** where lower is better, **96.53 FormulaCDM**, **85.26 TableTEDS**, **92.83 TableTEDS-S**, and **0.03 ReadOrderEdit**. That lines up pretty well with what I saw in my own testing: formulas, reading order, and structured extraction are clearly not an afterthought here. 
 
-![OmniDocBench metrics from Sarvam's launch post](/assets/images/posts/sarvam-omnidocbench-breakdown.png)
+![OmniDocBench metrics from Sarvam's launch post]({{ '/assets/images/posts/sarvam-omnidocbench-breakdown.png' | relative_url }}){: loading="lazy" decoding="async" width="1356" height="1102" style="height: auto;" }
 *The OmniDocBench breakdown is a better reflection of why this matters in practice: formulas, table structure, and reading order all matter a lot once you move from OCR demos to actual document pipelines.*
 
 I am usually pretty skeptical of benchmark heavy launches. But after trying it myself, I do think the numbers are pointing at something real here.

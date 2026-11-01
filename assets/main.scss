@@ -3,6 +3,132 @@
 
 @import "minima";
 
+// ---------------------------------------------------------------------------
+// Site navigation (2026-11-01): skip link + accessible mobile menu.
+// Markup: _includes/header.html; behaviour: assets/js/nav.js.
+// Desktop keeps minima's look. Below $on-palm (600px):
+//   - no JS: the links are always shown, in a wrapping row under the title;
+//   - JS: a 44px <button> toggles the menu. `scripting: enabled` collapses it before
+//     nav.js runs (no flash); `.is-enhanced`, added by nav.js, covers browsers without
+//     that media feature.
+// ---------------------------------------------------------------------------
+$nav-focus-color: #245ea8;
+
+.skip-link {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  font-weight: 600;
+  color: $nav-focus-color;
+  background: #fff;
+  border: 2px solid $nav-focus-color;
+  border-radius: 4px;
+  text-decoration: none;
+  transform: translateY(-300%);
+
+  &:focus { transform: none; outline: none; text-decoration: underline; }
+}
+.skip-target:focus { outline: none; }
+
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  color: $grey-color-dark;
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  .nav-toggle__icon { display: block; fill: currentColor; }
+  &:hover,
+  &[aria-expanded="true"] { background-color: #f0f0f0; }
+}
+
+.site-nav {
+  // Larger hit area (about 45px tall) without moving the links: vertical padding on an inline box
+  // doesn't change the line, and horizontal padding is cancelled by negative margins.
+  .page-link {
+    padding: 13px 6px;
+    margin-left: -6px;
+    margin-right: -6px;
+    &:not(:last-child) { margin-right: 20px - 6px; }
+  }
+  .page-link:focus-visible,
+  .nav-toggle:focus-visible {
+    outline: 2px solid $nav-focus-color;
+    outline-offset: 0;
+    border-radius: 3px;
+  }
+}
+
+@mixin site-nav-collapsible {
+  position: absolute;
+  top: 4px;
+  right: $spacing-unit * 0.5;
+  z-index: 10;
+  clear: none;
+  padding: 0;
+  text-align: right;
+  background-color: $background-color;
+  border: 1px solid $grey-color-light;
+  border-radius: 5px;
+
+  .nav-toggle { display: flex; margin-left: auto; }
+  .trigger { display: none; margin: 0; }
+  .nav-toggle[aria-expanded="true"] + .trigger {
+    display: block;
+    min-width: 11rem;
+    padding: 0 0 6px;
+  }
+  .page-link,
+  .page-link:not(:last-child) { justify-content: flex-end; padding: 0 16px; }
+}
+
+@include media-query($on-palm) {
+  // No-JS layout: every link visible, nothing overlaps the page.
+  .site-nav {
+    position: static;
+    float: none;
+    clear: both;
+    padding: 0 0 4px;
+    line-height: $base-line-height;
+    text-align: left;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+
+    .trigger { display: flex; flex-wrap: wrap; margin-left: -10px; }
+    .page-link,
+    .page-link:not(:last-child) {
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+      margin: 0;
+      padding: 0 10px;
+    }
+    .page-link[aria-current="page"] { font-weight: 600; }
+  }
+
+  .site-nav.is-enhanced { @include site-nav-collapsible; }
+}
+
+@media screen and (max-width: $on-palm) and (scripting: enabled) {
+  .site-nav { @include site-nav-collapsible; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .nav-toggle { transition: background-color 0.15s ease; }
+}
+
 // Custom styles
 .post-preview {
   margin-bottom: 2rem;

@@ -7,7 +7,7 @@
 
   {% include header.html %}
 
-  <main class="page-content" aria-label="Content">
+  <main id="content-start" class="page-content skip-target" aria-label="Content" tabindex="-1">
     <div class="wrapper">
       {{ content }}
     </div>
@@ -16,6 +16,6 @@
   {% include footer.html %}
 
 </body>
-<script src="{{ '/assets/js/main.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/main.js' | relative_url }}?v={{ site.time | date: '%s%N' }}"></script>
 
 </html>

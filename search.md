@@ -15,4 +15,4 @@ permalink: /search/
   <p class="search-status" role="status" aria-live="polite"></p>
   <ol class="search-results"></ol>
 </section>
-<script src="{{ '/assets/js/search.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/search.js' | relative_url }}?v={{ site.time | date: '%s%N' }}" defer></script>
