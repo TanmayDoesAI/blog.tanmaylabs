@@ -70,6 +70,13 @@ $nav-focus-color: #245ea8;
   }
 }
 
+// Desktop: keep the links on one line. The negative margins above make Firefox and Safari size the
+// right-floated nav a few px too narrow, which pushed the last link ("About") onto a second row
+// (2026-11-07). Chromium was unaffected. Below $on-palm the flex rules handle wrapping.
+@media screen and (min-width: #{$on-palm + 1px}) {
+  .site-nav .trigger { white-space: nowrap; }
+}
+
 @mixin site-nav-collapsible {
   position: absolute;
   top: 4px;

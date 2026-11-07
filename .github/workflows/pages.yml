@@ -1,0 +1,46 @@
+# Checks only. This workflow never deploys and uses no secrets: the repo is public, so pull requests
+# (including from forks) and re-runs have nothing to leak. Deploys to Cloudflare Pages happen on the
+# author's own server after the same checks (scripts/pages-stage.sh + scripts/check-links.py).
+#
+#   build with the pinned gems -> stage (broken-build guard, deny-listed files left out) -> internal links
+name: Site checks
+
+on:
+  push:
+    branches: [cloudflare-pages]
+  pull_request:
+  workflow_dispatch:
+
+# Read-only token; no secrets referenced anywhere in this file.
+permissions:
+  contents: read
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/.github/ci/Gemfile
+      JEKYLL_ENV: production
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: ruby/setup-ruby@26e5b7d197ebf60545ee9667bcbace0be11ccaec # v1.334.0
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true   # frozen install from .github/ci/Gemfile.lock
+
+      - name: Build
+        run: bundle exec jekyll build
+
+      - name: Stage (broken-build guard, deny-list)
+        run: scripts/pages-stage.sh _site "$RUNNER_TEMP/stage"
+
+      - name: Internal links
+        run: scripts/check-links.py "$RUNNER_TEMP/stage"

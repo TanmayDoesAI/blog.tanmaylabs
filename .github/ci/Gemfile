@@ -1,0 +1,5 @@
+# CI copy of the home server's .bundle/Gemfile.local (that folder is git-ignored).
+# Same gems and lock, so GitHub builds the site with exactly the versions used locally.
+eval_gemfile "../../Gemfile"
+gem "logger", ">= 1.7"
+gem "webrick", "~> 1.8"

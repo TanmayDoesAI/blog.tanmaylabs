@@ -52,3 +52,4 @@ exclude:
   - "*.bak-*"
   - "*.map"
   - vendor/
+  - scripts/        # 2026-11-07: Pages staging script, not site content
